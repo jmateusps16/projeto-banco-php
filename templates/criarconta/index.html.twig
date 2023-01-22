@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BANCO PHP
+{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="criarconta/css/criar_conta_style.css">
+{% endblock %}
+{% block body %}
+	<section class="h-100 gradient-form" style="background-color: #eee;">
+		<div class="container py-5 h-100">
+			<div class="row d-flex justify-content-center align-items-center h-100">
+				<div class="col-xl-10">
+					<div class="card rounded-3 text-black">
+						<div class="row g-0">
+							<div class="col-lg-6">
+								<form action="/conta/criar" method="post" onsubmit="renderizarsubmit(event, { caller: contaCriada, validater: contaValidar })" class="card-body p-md-5 mx-md-4">
+
+									<div class="text-center">
+										<img src="home/img/3d-green-bag-of-money-with-dollar-sign.png" style="width: 185px;" alt="logo">
+										<h4 class="mt-1 mb-5 pb-1">Selecione uma Agencia</h4>
+										<div class="d-flex align-items-center justify-content-center pb-4">
+											<select class="form-select" id="agencia_id" onchange="show(this)">
+												<option disabled="true" value="0">Selecione uma Agencia</option>
+											</select>
+										</div>
+										<h4 class="mt-1 mb-5 pb-1">Selecione um Tipo da Conta</h4>
+										<div class="d-flex align-items-center justify-content-center pb-4">
+											<select class="form-select" id="tipo_conta" onchange="show(this)">
+												<option disabled="true" value="0">Selecione o tipo de conta</option>
+											</select>
+										</div>
+									</div>
+									<div class="d-flex align-items-center justify-content-center pb-4">
+										<div class="mt-4 pt-2">
+											<input class="btn btn-outline-success" id="solicitar" type="submit" name="submit" value="Solicitar"/>
+										</div>
+										<div class="mt-4 pt-2">
+											<a href="/home">
+												<button type="button" id="voltar" class="btn btn-outline-secondary">Home</button>
+											</a>
+										</div>
+									</div>
+								</form>
+
+							</div>
+							<div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+								<div class="text-white px-3 py-4 p-md-5 mx-md-4">
+									<h4 class="mb-4">Estamos sempre inovando por você!</h4>
+									<p class="small mb-0">
+										Novidades no instagram, logo seremos um dos maiores bancos digitais do curso php!</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+		$request.get('/tipoconta').then((result) => {
+construirTipoConta(result.response);
+})
+
+$request.get('/agencia').then((result) => {
+construirAgencias(result.response);
+})
+
+function construirTipoConta(arr) {
+var out = "";
+var i;
+for (i = 0; i < arr.length; i++) {
+out += '<option value="' + arr[i].id + '">' + arr[i].descricao + '</option>';
+}
+document.getElementById("tipo_conta").insertAdjacentHTML("beforeend", out);
+}
+
+function construirAgencias(arr) {
+var out = "";
+var i;
+for (i = 0; i < arr.length; i++) {
+out += '<option value="' + arr[i].id + '"> Agencia: ' + arr[i].id + '</option>';
+}
+document.getElementById("agencia_id").insertAdjacentHTML("beforeend", out);
+}
+
+const contaCriada = async (event, {
+request,
+response,
+status,
+code,
+type
+}) => {
+location.href = '/home';
+}
+
+const contaValidar = async (json) => {
+for (const key in json) 
+json[key] = parseInt(json[key]);
+
+
+return json;
+}
+	</script>
+{% endblock %}
+

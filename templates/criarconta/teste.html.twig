@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BANCO PHP{% endblock %}
+  {% block stylesheets %}
+      <link rel="stylesheet" type="text/css" href="criarconta/css/criar_conta_style.css">
+  {% endblock %}
+{% block body %}
+<section class="vh-100 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row justify-content-center align-items-center h-100">
+      <div class="col-12 col-lg-9 col-xl-7">
+        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+          <div class="card-body p-4 p-md-5">
+            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">TESTE</h3>
+
+            <div id="forms-solicitation-account" class="p-4 p-md-5">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript">
+
+    const sharedModels = {
+      endereco_id: 0,
+      tipo_pessoa: 1,
+      pessoa: 0,
+      user_id: 0,
+      role: 'ROLE_USER'
+    }
+
+    const enderecoValidater = (json = {}) => {
+      return json;
+    }
+
+    const enderecoCriado = (event, { request, response, status, code, type }) => {
+      if (code == 200) {
+        sharedModels.endereco_id = response.id;
+        console.warn(sharedModels);
+        {# document.getElementById("salvaendereco").disabled = true; #}
+        {# var msg = document.getElementById('msgendereco');
+        msg.innerHTML = 'Endereco Salvo com sucesso.';
+        msg.style.color="green"; #}
+
+
+        const { id, main, childrens } = forms;
+        const children = childrens.person;
+        createElementAndSetValues(id, children)
+      } else {
+        var msg = document.getElementById('msgendereco');
+        msg.innerHTML = 'Preencha todos os campos!';
+        msg.style.color="red";
+      }
+    }
+
+    const forms = {
+      id: 'forms-solicitation-account',
+      main: 'address',
+      childrens: {
+        address: {
+          element: null,
+          tag: 'form',
+          attributes: {
+            action: '/conta/criar',
+            method: 'post'
+          },
+          events: {
+            onsubmit: (event) => renderizarsubmit(event, { caller: enderecoCriado, validater: enderecoValidater })
+          },
+          childrens: [
+`
+<div class="row">
+  <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Endereço</h3>
+</div>
+`,
+`
+<div class="row">
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" id="agencia_id" class="form-control form-control-lg" />
+      <label class="form-label" for="agencia_id">agencia_id</label>
+    </div>
+
+  </div>
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" id="tipo_conta" class="form-control form-control-lg" />
+      <label class="form-label" for="tipo_conta">tipo_conta</label>
+    </div>
+  </div>
+</div>
+`,
+`
+<div class="mt-4 pt-2">
+  <input class="btn btn-primary btn-lg" id="salvaendereco"type="submit" name="submit" value="Solicitar"/>
+</div>
+`,
+`
+<p id="msgendereco"></p>
+`,
+`
+<br>
+`
+          ]
+        }
+      }
+    }
+
+    window.onload = function () {
+      const { id, main, childrens } = forms;
+      const children = childrens[main];
+      createElementAndSetValues(id, children)
+    }
+  </script>
+{% endblock %}

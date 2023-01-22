@@ -1,0 +1,20 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+# HomePage
+homepage:
+    path:       /
+    controller: App\Controller\HomeController::index
+
+# Solicitação de Abertura de Conta
+solicitaConta:
+    path:       /
+    controller: App\Controller\SolicitacaoController::index
+
+# Criar Conta
+criarconta:
+    path:       /
+    controller: App\Controller\CriarContaController::index

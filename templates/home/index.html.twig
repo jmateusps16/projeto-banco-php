@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BANCO PHP
+{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="home/css/home_style.css">
+{% endblock %}
+{% block body %}
+	<section class="h-100 gradient-form" style="background-color: #eee;">
+		<div class="container py-5 h-100">
+			<div class="row d-flex justify-content-center align-items-center h-100">
+				<div class="col-xl-10">
+					<div class="card rounded-3 text-black">
+						<div class="row g-0">
+							<div class="col-lg-6">
+								<div class="card-body p-md-5 mx-md-4">
+
+									<div class="text-center">
+										<img src="home/img/3d-green-bag-of-money-with-dollar-sign.png" style="width: 185px;" alt="logo">
+										<h4 class="mt-1 mb-5 pb-1">Bem Vindo!</h4>
+									</div>
+
+									<div class="d-flex align-items-center justify-content-center pb-4">
+										<div class="mt-4 pt-2">
+											<a href='/extrato'>
+												<button type="button" id="extrato" class="btn btn-outline-info">Extrato</button>
+											</a>
+										</div>
+										<div class="mt-4 pt-2">
+											<a href="/criarmovimentacao">
+												<button type="button" id="transferir" class="btn btn-outline-info">Transferir</button>
+											</a>
+										</div>
+									</div>
+									<div class="d-flex align-items-center justify-content-center pb-4">
+										<div class="mt-4 pt-2">
+											<a href='/criarconta'>
+												<button type="button" id="criarconta" class="btn btn-outline-success">Nova Conta</button>
+											</a>
+										</div>
+										<div class="mt-4 pt-2">
+											<a href="/logout">
+												<button type="button" id="logout" class="btn btn-danger">Sair</button>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+								<div class="text-white px-3 py-4 p-md-5 mx-md-4">
+									<h4 class="mb-4">Estamos sempre inovando por você!</h4>
+									<p class="small mb-0">
+										Novidades no instagram, logo seremos um dos maiores bancos digitais do curso php!</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+	</script>
+{% endblock %}
+

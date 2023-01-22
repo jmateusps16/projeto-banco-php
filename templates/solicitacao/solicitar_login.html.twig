@@ -1,0 +1,285 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BANCO PHP - Abertura de Conta{% endblock %}
+
+{% block body %}
+<section class="vh-100 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row justify-content-center align-items-center h-100">
+      <div class="col-12 col-lg-9 col-xl-7">
+        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+          <div class="card-body p-4 p-md-5">
+            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Solicitação de Login</h3>
+
+            <div id="forms-solicitation-account" class="p-4 p-md-5">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+  <script type="text/javascript">
+
+    const sharedModels = {
+      endereco_id: 0,
+      tipo_pessoa: 1,
+      pessoa: 0,
+      user_id: 0,
+      role: 'ROLE_USER'
+    }
+
+    const enderecoValidater = (json = {}) => {
+      return json;
+    }
+
+    const enderecoCriado = (event, { request, response, status, code, type }) => {
+      if (code == 200) {
+        sharedModels.endereco_id = response.id;
+        console.warn(sharedModels);
+        {# document.getElementById("salvaendereco").disabled = true; #}
+        {# var msg = document.getElementById('msgendereco');
+        msg.innerHTML = 'Endereco Salvo com sucesso.';
+        msg.style.color="green"; #}
+
+
+        const { id, main, childrens } = forms;
+        const children = childrens.person;
+        createElementAndSetValues(id, children)
+      } else {
+        var msg = document.getElementById('msgendereco');
+        msg.innerHTML = 'Preencha todos os campos!';
+        msg.style.color="red";
+      }
+    }
+
+    const pessoaValidater = (json = {}) => {
+      json['endereco_id'] = sharedModels.endereco_id;
+      json['tipo_pessoa'] = sharedModels.tipo_pessoa;
+      console.log(json, sharedModels)
+      return json;
+    }
+
+    const pessoaCriado = (event, { request, response, status, code, type }) => {
+      if (code == 200) {
+        sharedModels.pessoa = response.id;
+        {# document.getElementById("salvapessoa").disabled = true; #}
+        {# var msg = document.getElementById('msgpessoa');
+        msg.innerHTML = 'Inforações salvas com sucesso.';
+        msg.style.color="green"; #}
+
+        const { id, main, childrens } = forms;
+        const children = childrens.user;
+        createElementAndSetValues(id, children)
+      } else {
+        var msg = document.getElementById('msgpessoa');
+        msg.innerHTML = 'Preencha todos os campos!';
+        msg.style.color="red";
+      }
+    }
+
+    const userValidater = (json = {}) => {
+      json['pessoa'] = sharedModels.pessoa;
+      return json;
+    }
+
+    const userCriado = (event, { request, response, status, code, type }) => {
+      if (code == 200) {
+        {# document.getElementById("solicitar").disabled = true; #}
+        {# var msg = document.getElementById('msguser');
+        msg.innerHTML = 'Usuário criado com sucesso. <a href="/login">Entrar</a>';
+        msg.style.color="green"; #}
+
+        const { id, main, childrens } = forms;
+        const children = childrens.user;
+        createElementAndSetValues(id, children)
+        location.href = `/login`;
+      } else {
+        var msg = document.getElementById('msguser');
+        msg.innerHTML = 'Falha na criação, tente novamente mais tarde!';
+        msg.style.color="red";
+      }
+    }
+
+    const forms = {
+      id: 'forms-solicitation-account',
+      main: 'address',
+      childrens: {
+        address: {
+          element: null,
+          tag: 'form',
+          attributes: {
+            action: '/endereco/criar',
+            method: 'post'
+          },
+          events: {
+            onsubmit: (event) => renderizarsubmit(event, { caller: enderecoCriado, validater: enderecoValidater })
+          },
+          childrens: [
+`
+<div class="row">
+  <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Endereço</h3>
+</div>
+`,
+`
+<div class="row">
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" id="logradouro" class="form-control form-control-lg" />
+      <label class="form-label" for="logradouro">Logradouro</label>
+    </div>
+
+  </div>
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" id="numero" class="form-control form-control-lg" />
+      <label class="form-label" for="numero">Numero</label>
+    </div>
+
+  </div>
+</div>
+`,
+`
+<div class="row">
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" id="bairro" class="form-control form-control-lg" />
+      <label class="form-label" for="bairro">Bairro</label>
+    </div>
+
+  </div>
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" pattern="[0-9]*" id="cep" class="form-control form-control-lg" placeholder="50000100"/>
+      <label class="form-label" for="cep">CEP</label>
+    </div>
+
+  </div>
+</div>
+`,
+`
+<div class="row">
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" id="estado" class="form-control form-control-lg" />
+      <label class="form-label" for="estado">Estado</label>
+    </div>
+
+  </div>
+</div>
+`,
+`
+<div class="mt-4 pt-2">
+  <input class="btn btn-primary btn-lg" id="salvaendereco"type="submit" name="submit" value="Salvar Endereco"/>
+</div>
+`,
+`
+<p id="msgendereco"></p>
+`,
+`
+<br>
+`
+          ]
+        },
+        person: {
+          element: null,
+          tag: 'form',
+          attributes: {
+            action: '/pessoa/criar',
+            method: 'post'
+          },
+          events:{
+            onsubmit: (event) => renderizarsubmit(event, { caller: pessoaCriado, validater: pessoaValidater })
+          },
+          childrens: [
+  `
+  <div class="row">
+    <div class="col-md-6 mb-4">
+
+    <div class="form-outline">
+        <input type="text" id="nome" name="nome" class="form-control form-control-lg" />
+        <label class="form-label" for="nome">Nome</label>
+    </div>
+
+    </div>
+    <div class="col-md-6 mb-4">
+
+    <div class="form-outline">
+        <input type="text" pattern="[0-9]*" id="documento" name="documento" class="form-control form-control-lg" placeholder="00011122233"/>
+        <label class="form-label" for="documento">CPF</label>
+    </div>
+
+    </div>
+  </div>
+  `,
+  `
+  <div class="mt-4 pt-2">
+    <input class="btn btn-primary btn-lg" id="salvapessoa"type="submit" name="submit" value="Salvar Informações"/>
+  </div>
+  `,
+  `
+  <p id="msgpessoa"></p>
+  `
+
+          ]
+        },
+        user: {
+          element: null,
+          tag: 'form',
+          attributes: {
+            action: '/user/criar',
+            method: 'post'
+          },
+          events: {
+            onsubmit: (event) => renderizarsubmit(event, { caller: userCriado, validater: userValidater })
+          },
+          childrens: [
+  `
+  <div class="row">
+    <div class="col-md-6 mb-4">
+
+    <div class="form-outline">
+        <input type="text" id="email" name="email" class="form-control form-control-lg" />
+        <label class="form-label" for="email">Email</label>
+    </div>
+
+    </div>
+    <div class="col-md-6 mb-4">
+
+    <div class="form-outline">
+        <input type="password" id="password" name="password" class="form-control form-control-lg" />
+        <label class="form-label" for="password">Senha</label>
+    </div>
+
+    </div>
+  </div>
+  `,
+  `
+  <div class="mt-4 pt-2">
+      <input class="btn btn-primary btn-lg" id="solicitar" type="submit" name="submit" value="Solicitar"/>
+  </div>
+  `,
+  `
+  <p id="msguser"></p>
+  `
+          ]
+        }
+      }
+    }
+
+    window.onload = function () {
+      const { id, main, childrens } = forms;
+      const children = childrens[main];
+      createElementAndSetValues(id, children)
+    }
+  </script>
+
+{% endblock %}

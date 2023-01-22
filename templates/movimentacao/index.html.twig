@@ -1,0 +1,184 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BANCO PHP - Movimentação{% endblock %}
+
+{% block body %}
+<section class="vh-100 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row justify-content-center align-items-center h-100">
+      <div class="col-12 col-lg-9 col-xl-7">
+        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+          <div class="card-body p-4 p-md-5">
+            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Movimentação</h3>
+
+            <div id="select-type" class="d-flex align-items-center justify-content-center pb-4">
+              
+            </div>
+            <div id="forms-solicitation-account" class="p-4 p-md-5">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+  const shared = {
+    accounts: [],
+    status: 1
+  }
+
+  const validador = function (json) {
+    {# console.warn(json) #}
+    json.status = shared.status;
+    return json;
+  }
+
+  const criada = function (event, { response }) {
+    location.href = '/home';
+  }
+
+  const contaSelectHTML = () => {
+    let select = ['<select class="form-select" id="conta_id">']
+    for (const account of shared.accounts) {
+      select.push(`<option value="${account.id}">Agência: ${account.agencia_id} Conta: ${account.id}</option>`)
+    }
+    select.push(`</select>`);
+    return `
+<div class="col-md-6 w-100 mb-4 pb-2">
+  ${select.join('')}
+  <label class="form-label" for="status">Agência e conta</label>
+</div>
+`;
+  }
+
+  const getTipoTransferenciaHTML = () => {
+    return `
+<div class="col-md-6 mb-4 pb-2">
+  <select class="form-select" id="tipo">
+    <option value="1">DOC</option>
+    <option value="2">TED</option>
+    <option value="3">PIX</option>
+    <option value="4">DINHEIRO</option>
+  </select>
+  <label class="form-label" for="tipo">Tipo movimentação</label>
+</div>
+`;
+  }
+
+  const setValues = (id, type) => {
+    const element = document.getElementById(id);
+    
+    element.innerHTML = '';
+    switch (type) {
+      case 1:
+        let entradaHtml = [`
+<form action='/movimentacao/entrada/criar' method='post' onsubmit="renderizarsubmit(event, { caller: criada, validater: validador })">
+  <div class="row">
+    <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Movimentação Entrada</h3>
+  </div>
+
+  ${contaSelectHTML()}
+
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" oninput="inputFloat(event)" id="valor" class="form-control form-control-lg" />
+      <label class="form-label" for="valor">Valor</label>
+    </div>
+
+  </div>
+
+  ${getTipoTransferenciaHTML()}
+
+  <div class="mt-4 pt-2">
+    <input class="btn btn-primary btn-lg" id="salvaendereco" type="submit" name="submit" value="Realizar movimentação"/>
+  </div>
+</form>
+`];
+        element.innerHTML = entradaHtml;
+        break;
+      case 2:
+        let saidaHtml = [`
+<form action='/movimentacao/saida/criar' method='post' onsubmit="renderizarsubmit(event, { caller: criada, validater: validador })">
+  <div class="row">
+    <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Movimentação Entrada</h3>
+  </div>
+
+  ${contaSelectHTML()}
+
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" oninput="inputInt(event)" id="agencia_destino_id" class="form-control form-control-lg" />
+      <label class="form-label" for="agencia_destino_id">Agencia destino</label>
+    </div>
+
+  </div>
+
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" oninput="inputInt(event)" id="conta_destino_id" class="form-control form-control-lg" />
+      <label class="form-label" for="conta_destino_id">Conta destino</label>
+    </div>
+
+  </div>
+
+  <div class="col-md-6 mb-4 pb-2">
+
+    <div class="form-outline">
+      <input type="text" oninput="inputFloat(event)" id="valor" class="form-control form-control-lg" />
+      <label class="form-label" for="valor">Valor</label>
+    </div>
+
+  </div>
+
+  ${getTipoTransferenciaHTML()}
+
+  <div class="mt-4 pt-2">
+    <input class="btn btn-primary btn-lg" id="salvaendereco" type="submit" name="submit" value="Realizar movimentação"/>
+  </div>
+</form>
+`];
+        element.innerHTML = saidaHtml;
+        break;
+    }
+  }
+
+  const typeChanged = (event) => {
+    const id = 'forms-solicitation-account',
+          type = parseInt(event.target.options[event.target.selectedIndex].value);
+
+    shared.status = type;
+    setValues(id, type);
+  }
+
+  window.onload = async () => {
+    const { response } = await $request.get('/conta', {})
+
+    if (response.length == 0) {
+      alert('você não possui contas');
+      location.href = '/home';
+      return;
+    }
+
+    shared.accounts = response;
+    const div = document.getElementById('select-type');
+    div.innerHTML = `
+<div class="col-md-6 w-100 mb-4 pb-2">
+  <select class="form-select" id="status" onchange="typeChanged(event)">
+    <option value="1">Entrada</option>
+    <option value="2">Saida</option>
+  </select>
+  <label class="form-label" for="status">Tipo movimentação</label>
+</div>
+`;
+    setValues('forms-solicitation-account', 1);
+  }
+</script>
+
+{% endblock %}
